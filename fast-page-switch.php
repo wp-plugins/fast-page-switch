@@ -4,7 +4,7 @@
 Plugin Name: Fast Page Switch
 Plugin URI: http://gravitysupport.com
 Description: Lets you quickly switch pages in admin edit view.
-Version: 1.0.0
+Version: 1.0.1
 Author: Marc Wiest
 Author URI: http://gravitysupport.com
 */
@@ -14,6 +14,9 @@ if ( ! defined( 'WPINC' ) )
 
 define( 'WPHX_I18N', 'gsfps' );
 
+/**
+ * Select Element
+ */
 function gsfps_metabox_markup() 
 {
     $args = array(
@@ -44,7 +47,10 @@ function gsfps_metabox_markup()
 
     echo $jquery.$html;
 }
- 
+
+/**
+ * Add Metabox
+ */
 add_action( 'add_meta_boxes', 'gsfps_add_metabox' );
 function gsfps_add_metabox() 
 {
