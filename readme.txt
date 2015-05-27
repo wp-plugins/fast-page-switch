@@ -13,7 +13,7 @@ Save time switching between pages in admin.
 
 This plugin adds a metabox to the edit screen for pages. The metabox lets you quickly switch between all available pages. No need to visit "All Pages" first.
 
-If this plugin saves you time, please consider leaving a review. Thank you.
+If this plugin saves you time, please consider returning the favor with a good rating. Thank you.
 
 == Changelog ==
 

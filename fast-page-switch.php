@@ -42,10 +42,6 @@ function gsfps_metabox_markup()
 
     endif;
 
-    // @todo add note after continued use:
-    // If this plugin saves you time, please return the favor with a good rating. 
-    // Thanks
-
     echo $jquery.$html;
 }
  
