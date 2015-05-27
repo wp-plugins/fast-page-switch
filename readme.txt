@@ -17,5 +17,9 @@ If this plugin saves you time, please consider returning the favor with a good r
 
 == Changelog ==
 
+= 1.0.1 =
+* Added a little bit of code documentation.
+* Updated the readme.
+
 = 1.0.0 =
 * Initial Release
