@@ -19,9 +19,15 @@ If this plugin saves you time, please consider returning the favor with a good r
 
 == Changelog ==
 
+= 1.1.7 =
+* Addressed a bug where Select2 was getting stuck on the new value when a page change was prevented due to unsaved changes.
+* Fixed a bug where select2.js wasn't being loaded for "add new" pages.
+* Included more post_status pages: private, draft, future and pending are now available via the dropdown. This also includes password protected pages.
+* Included a filter called "fps_get_pages_by_post_status" to change the post_status argument for get_pages().
+
 = 1.1.3 =
-* Include the [Select2](https://github.com/select2/select2) jQuery plugin.
-* Lowered the minimum required WP version from 4 to the accurate number.
+* Included the [Select2](https://github.com/select2/select2) jQuery plugin.
+* Lowered the minimum required WP version from 4 to the accurate version.
 * Changed the metabox title to the plugin's name.
 
 = 1.0.1 =

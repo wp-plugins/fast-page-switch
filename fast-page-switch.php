@@ -4,7 +4,7 @@
 Plugin Name: Fast Page Switch
 Plugin URI: http://gravitysupport.com
 Description: Lets you quickly switch pages in admin edit view.
-Version: 1.1.3
+Version: 1.1.7
 Author: Marc Wiest
 Author URI: http://gravitysupport.com
 */
@@ -22,10 +22,13 @@ define( 'FPS_PLUGIN_URL', plugins_url( '/', __FILE__ ) );
 add_action( 'admin_enqueue_scripts', 'fps_admin_scripts' );
 function fps_admin_scripts() 
 {
-    $post_type = get_current_screen()->post_type;
-    $action = isset($_GET['action']) ? $_GET['action'] : '';
+    $screen = get_current_screen();
 
-    if ( 'page' == $post_type && 'edit' == $action ) : 
+    $post_type = $screen->post_type;
+    $action = $screen->action;
+    $action = empty($action) && isset($_GET['action']) ? $_GET['action'] : $action;
+
+    if ( 'page' == $post_type && ('add' == $action || 'edit' == $action) ) : 
         wp_enqueue_style( 'fps-select2', FPS_PLUGIN_URL.'assets/css/select2.css', array(), '4.0.0' );
         wp_enqueue_script( 'fps-select2-js', FPS_PLUGIN_URL.'assets/js/select2.min.js', array('jquery'), '4.0.0' );
     endif;
@@ -38,10 +41,13 @@ function fps_metabox_markup()
 {
     $args = array(
         'depth' => 0,
-        'selected' => $_GET['post'],
+        'selected' => isset($_GET['post']) ? $_GET['post'] : 0,
     );
 
-    $pages = get_pages( array( 'post_type' => 'page' ) );
+    $pages = get_pages( array( 
+        'post_type' => 'page', 
+        'post_status' => apply_filters( 'fps_get_pages_by_post_status', 'publish,private,draft,future,pending' ),
+    ) );
 
     if ( ! empty($pages) ) : 
 
@@ -58,9 +64,14 @@ function fps_metabox_markup()
 
                 fps.on( 'select2:select', function (event) {
                     event.preventDefault;
+
                     var id = $(this).val();
                     var admin_url = '".trailingslashit(admin_url())."';
                     window.location.href = admin_url + 'post.php?post=' + id + '&action=edit';
+
+                    // Addressed a bug where Select2 was getting stuck on the new value 
+                    // when a page change was prevented due to unsaved changes.
+                    fps.val('".$args['selected']."').trigger('change');
                 });
 
             });
