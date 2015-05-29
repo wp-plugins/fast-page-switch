@@ -17,6 +17,10 @@ You can learn more about the plugin in an [article by Jeff Chandler at WPTavern]
 
 If this plugin saves you time, please consider returning the favor with a good rating. Thanks.
 
+== Screenshots ==
+
+1. A quick preview of the fast page switch metabox and it's functionality.
+
 == Changelog ==
 
 = 1.1.9 =
