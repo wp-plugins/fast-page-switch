@@ -13,8 +13,6 @@ Save time switching between pages in admin.
 
 This plugin adds a metabox to the edit screen for pages. The metabox lets you quickly switch between all available pages using the Select2 jQuery plugin. No need to visit "All Pages" first.
 
-You can learn more about the plugin in an [article by Jeff Chandler at WPTavern](http://wptavern.com/fast-page-switch-adds-a-quick-way-to-switch-between-pages-in-the-wordpress-backend).
-
 If this plugin saves you time, please consider returning the favor with a good rating. Thanks.
 
 == Screenshots ==
