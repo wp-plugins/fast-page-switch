@@ -4,7 +4,7 @@
 Plugin Name: Fast Page Switch
 Plugin URI: http://gravitysupport.com
 Description: Lets you quickly switch pages in admin edit view.
-Version: 1.1.7
+Version: 1.1.9
 Author: Marc Wiest
 Author URI: http://gravitysupport.com
 */
@@ -29,8 +29,8 @@ function fps_admin_scripts()
     $action = empty($action) && isset($_GET['action']) ? $_GET['action'] : $action;
 
     if ( 'page' == $post_type && ('add' == $action || 'edit' == $action) ) : 
-        wp_enqueue_style( 'fps-select2', FPS_PLUGIN_URL.'assets/css/select2.css', array(), '4.0.0' );
-        wp_enqueue_script( 'fps-select2-js', FPS_PLUGIN_URL.'assets/js/select2.min.js', array('jquery'), '4.0.0' );
+        wp_enqueue_style( 'select2', FPS_PLUGIN_URL.'assets/css/select2.css', array(), '4.0.0' );
+        wp_enqueue_script( 'select2', FPS_PLUGIN_URL.'assets/js/select2.min.js', array('jquery'), '4.0.0' );
     endif;
 }
 
@@ -62,17 +62,27 @@ function fps_metabox_markup()
                     theme: 'classic'
                 });
 
-                fps.on( 'select2:select', function (event) {
+                fps.on( 'change', function (event) { 
                     event.preventDefault;
 
-                    var id = $(this).val();
-                    var admin_url = '".trailingslashit(admin_url())."';
-                    window.location.href = admin_url + 'post.php?post=' + id + '&action=edit';
+                    if ( fps.val() !== '".$args['selected']."' ) {
 
-                    // Addressed a bug where Select2 was getting stuck on the new value 
-                    // when a page change was prevented due to unsaved changes.
-                    fps.val('".$args['selected']."').trigger('change');
+                        location_change( $(this).val() );
+
+                        // - Select2 was getting stuck on the new value when a 
+                        //   page change was prevented due to unsaved changes. 
+                        // - To be backwards compatible with Select2 version 3,
+                        //   the old method for reseting a value is also used.
+                        fps.select2('val','".$args['selected']."'); // Select2 v3
+                        fps.val('".$args['selected']."').trigger('change'); // Select2 v4
+                    }
                 });
+
+                function location_change( post_id ) {
+                    // var id = $(this).val();
+                    var admin_url = '".trailingslashit(admin_url())."';
+                    window.location.href = admin_url + 'post.php?post=' + post_id + '&action=edit';
+                }
 
             });
 
