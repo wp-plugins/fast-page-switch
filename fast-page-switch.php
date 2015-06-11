@@ -4,7 +4,7 @@
 Plugin Name: Fast Page Switch
 Plugin URI: http://gravitysupport.com
 Description: Lets you quickly switch pages in admin edit view.
-Version: 1.1.9
+Version: 1.2.9
 Author: Marc Wiest
 Author URI: http://gravitysupport.com
 */
@@ -39,17 +39,41 @@ function fps_admin_scripts()
  */
 function fps_metabox_markup() 
 {
-    $args = array(
-        'depth' => 0,
-        'selected' => isset($_GET['post']) ? $_GET['post'] : 0,
-    );
-
     $pages = get_pages( array( 
         'post_type' => 'page', 
-        'post_status' => apply_filters( 'fps_get_pages_by_post_status', 'publish,private,draft,future,pending' ),
+        'post_status' => apply_filters( 'fps_get_pages_by_post_status', 'publish,private,draft,auto-draft,future,pending' ),
     ) );
 
-    if ( ! empty($pages) ) : 
+    $posts = get_posts( array(
+        'post_type' => 'post',
+        'post_status' => apply_filters( 'fps_get_posts_by_post_status', array('private','draft','auto-draft','future','pending','publish') ),
+        'posts_per_page' => -1,
+    ) );
+
+    $page_selected = 0;
+    $post_selected = 0;
+    foreach( $pages as $page ) : 
+
+        if ( isset($_GET['post']) ) {
+
+            $selected = $_GET['post'];
+        
+            if ( $page->ID == $selected ) {
+                $page_selected = $selected;
+            } else {
+                $post_selected = $selected;
+            }
+
+        }
+
+    endforeach;
+
+    $args = array(
+        'depth' => 0,
+        'selected' => $page_selected, // isset($_GET['post']) ? $_GET['post'] : 0,
+    );
+
+    if ( !empty($pages) || !empty($posts) ) : 
 
         $jquery = "<script>
             
@@ -65,7 +89,7 @@ function fps_metabox_markup()
                 fps.on( 'change', function (event) { 
                     event.preventDefault;
 
-                    if ( fps.val() !== '".$args['selected']."' ) {
+                    if ( fps.val() !== '".$selected."' ) {
 
                         location_change( $(this).val() );
 
@@ -73,13 +97,12 @@ function fps_metabox_markup()
                         //   page change was prevented due to unsaved changes. 
                         // - To be backwards compatible with Select2 version 3,
                         //   the old method for reseting a value is also used.
-                        fps.select2('val','".$args['selected']."'); // Select2 v3
-                        fps.val('".$args['selected']."').trigger('change'); // Select2 v4
+                        fps.select2('val','".$selected."'); // Select2 v3
+                        fps.val('".$selected."').trigger('change'); // Select2 v4
                     }
                 });
 
                 function location_change( post_id ) {
-                    // var id = $(this).val();
                     var admin_url = '".trailingslashit(admin_url())."';
                     window.location.href = admin_url + 'post.php?post=' + post_id + '&action=edit';
                 }
@@ -89,7 +112,15 @@ function fps_metabox_markup()
         </script>";
 
         $html = '<select id="fast-page-switch" style="width:100%;">';
+        $html .= '<optgroup label="'.__('Pages',FPS_I18N).'">';
         $html .= walk_page_dropdown_tree( $pages, $args['depth'], $args );
+        $html .= '</optgroup>';
+        $html .= '<optgroup label="'.__('Posts',FPS_I18N).'">';
+        foreach( $posts as $post ) : 
+            $s = $post_selected == $post->ID ? ' selected="selected"' : '';
+            $html .= '<option'.$s.' value="'.$post->ID.'">'.$post->post_title.'</option>';
+        endforeach;
+        $html .= '</optgroup>';
         $html .= '</select>';
 
     endif;
@@ -104,10 +135,20 @@ add_action( 'add_meta_boxes', 'fps_add_metabox' );
 function fps_add_metabox() 
 {
     add_meta_box( 
-        'fps-metabox', 
+        'fps-metabox-page', 
         __( 'Fast Page Switch', FPS_I18N ), 
         'fps_metabox_markup', 
         'page', 
+        'side', 
+        'high', 
+        null 
+    );
+
+    add_meta_box( 
+        'fps-metabox-post', 
+        __( 'Fast Page Switch', FPS_I18N ), 
+        'fps_metabox_markup', 
+        'post', 
         'side', 
         'high', 
         null 
