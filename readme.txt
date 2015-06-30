@@ -21,6 +21,9 @@ If this plugin saves you time, please consider returning the favor with a good r
 
 == Changelog ==
 
+= 1.3.0 =
+* Fixed a bug were select2.js wasn't not enqueued on post edit screens.
+
 = 1.2.9 =
 * Added posts to the page switch dropdown.
 * Included a filter called "fps_get_posts_by_post_status" to change the post_status argument for get_posts().

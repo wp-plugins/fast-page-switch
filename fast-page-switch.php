@@ -4,7 +4,7 @@
 Plugin Name: Fast Page Switch
 Plugin URI: http://gravitysupport.com
 Description: Lets you quickly switch pages in admin edit view.
-Version: 1.2.9
+Version: 1.3.0
 Author: Marc Wiest
 Author URI: http://gravitysupport.com
 */
@@ -28,7 +28,7 @@ function fps_admin_scripts()
     $action = $screen->action;
     $action = empty($action) && isset($_GET['action']) ? $_GET['action'] : $action;
 
-    if ( 'page' == $post_type && ('add' == $action || 'edit' == $action) ) : 
+    if ( ( 'page' == $post_type || 'post' == $post_type ) && ('add' == $action || 'edit' == $action) ) : 
         wp_enqueue_style( 'select2', FPS_PLUGIN_URL.'assets/css/select2.css', array(), '4.0.0' );
         wp_enqueue_script( 'select2', FPS_PLUGIN_URL.'assets/js/select2.min.js', array('jquery'), '4.0.0' );
     endif;
@@ -82,9 +82,11 @@ function fps_metabox_markup()
 
                 var fps = $('#fast-page-switch');
     
-                fps.select2({
-                    theme: 'classic'
-                });
+                if ( typeof fps.select2() == 'object' ) {
+                    fps.select2({
+                        theme: 'classic'
+                    });
+                }
 
                 fps.on( 'change', function (event) { 
                     event.preventDefault;
