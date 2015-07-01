@@ -21,6 +21,10 @@ If this plugin saves you time, please consider returning the favor with a good r
 
 == Changelog ==
 
+= 1.3.1 =
+* Added a placeholder for "Add New" screens.
+* Limited the metabox to show only for admin and editor roles for now.
+
 = 1.3.0 =
 * Fixed a bug were select2.js wasn't not enqueued on post edit screens.
 
